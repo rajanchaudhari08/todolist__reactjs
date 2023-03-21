@@ -44,6 +44,64 @@ const App = () => {
 
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
+  /* React UI State Management */
+  
+  const [task, setTask] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  /* Reat Hook - "useRef" :: store references to DOM nodes and React Components */
+
+  const refTaskTitle = useRef("");
+  const refTaskDescription = useRef("");
+
+  /* Create Task Function */
+
+  const createTask = () => {
+    setTask([
+      ...task,
+      {
+        title: refTaskTitle.current.value,
+        description: refTaskDescription.current.value,
+      },
+    ]);
+    storeTask([
+      ...task,
+      {
+        title: refTaskTitle.current.value,
+        description: refTaskDescription.current.value,
+      },
+    ]);
+  };
+
+  /* Remove Task Function */
+
+  const removeTask = (index) => {
+    var deleteTask = [...task];
+    deleteTask.splice(index, 1);
+    setTask(deleteTask);
+    storeTask([...deleteTask]);
+  };
+
+  /* Store data to Local Storage */
+
+  const fetchTask = () => {
+    let loadTask = localStorage.getItem("task");
+    let task = JSON.parse(loadTask);
+
+    if (task) {
+      setTask(task);
+    }
+  };
+
+  const storeTask = (task) => {
+    localStorage.setItem("task", JSON.stringify(task));
+  };
+
+  /*  */
+  useEffect(() => {
+    fetchTask();
+  }, []);
+
   return (
     <Fragment>
       <ColorSchemeProvider>
