@@ -45,7 +45,7 @@ const App = () => {
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   /* React UI State Management */
-  
+
   const [task, setTask] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -98,29 +98,125 @@ const App = () => {
   };
 
   /* React Hook - "useEffect" :: perform side effects from within functional components */
-  
+
   useEffect(() => {
     fetchTask();
   }, []);
 
   return (
     <Fragment>
-      <ColorSchemeProvider>
-        <MantineProvider>
-          <Modal>
-            <TextInput></TextInput>
-            <TextInput></TextInput>
-            <Group>
-              <Button></Button>
-              <Button></Button>
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
+      >
+        <MantineProvider
+          theme={{ colorScheme, defaultRadius: "md" }}
+          withGlobalStyles
+          withNormalizeCSS
+        >
+          <Modal
+            opened={open}
+            title={"Create Task"}
+            withCloseButton={false}
+            onClose={() => {
+              setOpen(false);
+            }}
+            size={"sm"}
+            centered
+          >
+            <TextInput
+              ref={refTaskTitle}
+              label={"Task Title"}
+              placeholder={"Task Title"}
+              mt={"md"}
+              required
+            />
+            <TextInput
+              ref={refTaskDescription}
+              label={" Task Description"}
+              placeholder={"Task Description"}
+              mt={"md"}
+            />
+            <Group position={"apart"} mt={"md"}>
+              <Button
+                onClick={() => {
+                  setOpen(false);
+                }}
+                variant={"subtle"}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  createTask();
+                  setOpen(false);
+                }}
+              >
+                Create Task
+              </Button>
             </Group>
           </Modal>
-          <Container>
-            <Group>
-              <Title></Title>
-              <ActionIcon></ActionIcon>
+          <Container size={400} my={1}>
+            <Group position={"apart"}>
+              <Title
+                sx={(theme) => ({
+                  fontFamily: `Cambria, ${theme.fontFamily}`,
+                  fontWeight: 400,
+                  fontSize: 24,
+                })}
+              >
+                Task List
+              </Title>
+              <ActionIcon
+                color={"blue"}
+                onClick={() => toggleColorScheme()}
+                size={"lg"}
+              >
+                {colorScheme === "dark" ? (
+                  <Sun size={16} />
+                ) : (
+                  <MoonStars size={16} />
+                )}
+              </ActionIcon>
             </Group>
-            <Button>Create Task</Button>
+            {task.length > 0 ? (
+              task.map((task, index) => {
+                if (task.title) {
+                  return (
+                    <Card withBorder ket={index} mt={"sm"}>
+                      <Group position={"apart"}>
+                        <Text weight={"bold"}>{task.title}</Text>
+                        <ActionIcon
+                          onClick={() => {
+                            removeTask(index);
+                          }}
+                          variant={"transparent"}
+                          color={"red"}
+                        >
+                          <Trash />
+                        </ActionIcon>
+                      </Group>
+                      <Text color={"dimmed"} size={"md"} mt={"sm"}>
+                        {task.description ? task.description : "No Descriprion"}
+                      </Text>
+                    </Card>
+                  );
+                }
+              })
+            ) : (
+              <Text color={"dimmed"} size={"md"} mt={"sm"}>
+                No Task created
+              </Text>
+            )}
+            <Button
+              onClick={() => {
+                setOpen(true);
+              }}
+              fullWidth
+              mt={"md"}
+            >
+              Create Task
+            </Button>
           </Container>
         </MantineProvider>
       </ColorSchemeProvider>
