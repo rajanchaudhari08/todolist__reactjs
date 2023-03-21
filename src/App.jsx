@@ -97,7 +97,8 @@ const App = () => {
     localStorage.setItem("task", JSON.stringify(task));
   };
 
-  /*  */
+  /* React Hook - "useEffect" :: perform side effects from within functional components */
+  
   useEffect(() => {
     fetchTask();
   }, []);
