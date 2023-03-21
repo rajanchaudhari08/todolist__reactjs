@@ -28,6 +28,22 @@ import { useColorScheme, useHotkeys, useLocalStorage } from "@mantine/hooks";
 import { Sun, MoonStars, Trash } from "tabler-icons-react";
 
 const App = () => {
+  /* Toggle Color Scheme Function: Light and Dark Theme Mode for Browser Screen */
+
+  const preferredColorScheme = useColorScheme();
+
+  const [colorScheme, setColorScheme] = useLocalStorage({
+    key: "mantine-color-scheme",
+    defaultValue: "light",
+    getInitialValueInEffect: true,
+  });
+
+  const toggleColorScheme = (value) => {
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  };
+
+  useHotkeys([["mod+J", () => toggleColorScheme()]]);
+
   return (
     <Fragment>
       <ColorSchemeProvider>
