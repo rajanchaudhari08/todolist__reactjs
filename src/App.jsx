@@ -80,6 +80,7 @@ const App = () => {
     deleteTask.splice(index, 1);
     setTask(deleteTask);
     storeTask([...deleteTask]);
+    localStorage.removeItem("task");
   };
 
   /* Store data to Local Storage */
